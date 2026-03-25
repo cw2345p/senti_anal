@@ -146,14 +146,20 @@ if st.button("🚀 모델별 분석 시작") and input_text:
         st.header("2️⃣ Deep Learning (BERT)")
         if dl_pipe:
             with st.spinner("딥러닝 분석 중..."):
-                # 1) 딥러닝 예측 (문맥 파악)
-                # 모델에 따라 LABEL이 긍정/부정인지 확인 필요 (여기서는 LABEL_1을 긍정으로 가정)
-                # 결과를 받을 때 바로 [0]을 붙여서 첫 번째 딕셔너리를 꺼냅니다.
-                result = dl_pipe(input_text)[0] 
+                # 1) 딥러닝 예측
+                result = dl_pipe(input_text)[0] # 첫 번째 결과 딕셔너리 추출
+                
+                # 2) 안전하게 값 추출 (KeyError 방지)
+                label = result.get('label', 'LABEL_1')
+                score = result.get('score', 0.5)
 
-                # 이제 딕셔너리 접근이 가능해집니다.
-                score_pos = result[0]['score'] if result[0]['label'] == 'LABEL_1' else 1 - result[0]['score']
-
+                # 모델에 따라 'LABEL_1', '1', 'positive' 등이 긍정일 수 있음
+                # 만약 결과가 반대로 나온다면 아래 조건문의 '1'을 '0'으로 바꾸면 됩니다.
+                if '1' in label or 'pos' in label.lower():
+                    score_pos = score
+                else:
+                    score_pos = 1 - score
+                    
                 # 시각화 1: 게이지 차트 (색상 차별화)
                 fig_g2 = go.Figure(go.Indicator(
                     mode = "gauge+number", value = score_pos * 100,
