@@ -3,3 +3,4 @@ plotly
 kiwipiepy
 transformers
 scikit-learn
+torch
