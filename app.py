@@ -29,7 +29,7 @@ def load_all_models():
     try:
         # 한국어 영화 리뷰(NSMC)에 최적화된 KoELECTRA 모델
         # 가장 널리 쓰이는 NSMC 학습 KoELECTRA 모델입니다.
-        dl_pipe = pipeline("sentiment-analysis", model="monologg/koelectra-base-v3-discriminator")
+        dl_pipe = pipeline("sentiment-analysis", model="monologg/koelectra-small-v3-discriminator")
         # dl_pipe = pipeline("text-classification", model="matthewburke/korean_sentiment", top_k=None)
     except Exception as e:
         st.error(f"⚠️ 딥러닝 모델 로드 실패: {e}")
