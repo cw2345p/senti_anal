@@ -28,8 +28,8 @@ def load_all_models():
     # [MODEL 2] Deep Learning (HuggingFace Transformers)
     try:
         # 한국어 영화 리뷰(NSMC)에 최적화된 KoELECTRA 모델
-        # dl_pipe = pipeline("sentiment-analysis", model="white_deer/koelectra-base-v3-discriminator-finetuned-nsmc")
-        dl_pipe = pipeline("text-classification", model="matthewburke/korean_sentiment", top_k=None)
+        dl_pipe = pipeline("sentiment-analysis", model="white_deer/koelectra-base-v3-discriminator-finetuned-nsmc")
+        # dl_pipe = pipeline("text-classification", model="matthewburke/korean_sentiment", top_k=None)
     except Exception as e:
         st.error(f"⚠️ 딥러닝 모델 로드 실패: {e}")
         dl_pipe = None
