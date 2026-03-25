@@ -2,3 +2,4 @@ joblib
 plotly
 kiwipiepy
 transformers
+scikit-learn
