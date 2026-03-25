@@ -146,20 +146,23 @@ if st.button("🚀 모델별 분석 시작") and input_text:
         st.header("2️⃣ Deep Learning (BERT)")
         if dl_pipe:
             with st.spinner("딥러닝 분석 중..."):
-                # 1) 딥러닝 예측
-                result = dl_pipe(input_text)[0] # 첫 번째 결과 딕셔너리 추출
+                result = dl_pipe(input_text)
                 
-                # 2) 안전하게 값 추출 (KeyError 방지)
-                label = result.get('label', 'LABEL_1')
-                score = result.get('score', 0.5)
-
-                # 모델에 따라 'LABEL_1', '1', 'positive' 등이 긍정일 수 있음
-                # 만약 결과가 반대로 나온다면 아래 조건문의 '1'을 '0'으로 바꾸면 됩니다.
-                if '1' in label or 'pos' in label.lower():
-                    score_pos = score
-                else:
-                    score_pos = 1 - score
+                # 결과가 있고, 리스트 안에 내용이 있는지 확인
+                if result and len(result) > 0:
+                    res = result[0] # 첫 번째 결과 추출
+                    label = res.get('label', '')
+                    score = res.get('score', 0.5)
                     
+                    # 모델마다 긍정 라벨 이름이 다를 수 있음 (1, POSITIVE, LABEL_1 등)
+                    if '1' in label or 'POS' in label.upper():
+                        score_pos = score
+                    else:
+                        score_pos = 1 - score
+                else:
+                    st.error("모델이 결과를 반환하지 않았습니다.")
+                    score_pos = 0.5
+
                 # 시각화 1: 게이지 차트 (색상 차별화)
                 fig_g2 = go.Figure(go.Indicator(
                     mode = "gauge+number", value = score_pos * 100,
@@ -179,7 +182,7 @@ if st.button("🚀 모델별 분석 시작") and input_text:
                         }
                     }
                 ))
-                st.plotly_chart(fig_g2, use_container_width=True)
+                st.plotly_chart(fig_g2, width='stretch')
 
                 # 시각화 2: 문맥 분석 리포트
                 st.subheader("🧠 문맥 분석 리포트")
